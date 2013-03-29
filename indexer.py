@@ -38,17 +38,21 @@ def main(argv):
 	# create index path	
 	index_path = path + '/index/'
 	if not os.path.exists(index_path): 
-		os.makedirs(index_path)		
-	
-	# do indexing
-	if (single_chapter != '')
-		process_chapter(path + single_chapter, index_path, enable_stem)
-	elif
+		os.makedirs(index_path)
+	else:
 		#delete all exising files
 		for the_file in os.listdir(index_path):
 			file_path = os.path.join(index_path, the_file)
 			os.unlink(file_path)		
-
+					
+	
+	# do indexing
+	if single_chapter != '':
+		single_path = path + single_chapter + '.html'
+		process_chapter(single_path, index_path, enable_stem)
+	
+	else:
+	
 		# go through osis book names to keep things in order
 		osis_names = ["Gen", "Exod", "Lev", "Num", "Deut", "Josh", "Judg", "Ruth", "1Sam", "2Sam", "1Kgs", "2Kgs", "1Chr", "2Chr", "Ezra", "Neh", "Esth", "Job", "Ps", "Prov", "Eccl", "Song", "Isa", "Jer", "Lam", "Ezek", "Dan", "Hos", "Joel", "Amos", "Obad", "Jonah", "Mic", "Nah", "Hab", "Zeph", "Hag", "Zech", "Mal", "Matt", "Mark", "Luke", "John", "Acts", "Rom", "1Cor", "2Cor", "Gal", "Eph", "Phil", "Col", "1Thess", "2Thess", "1Tim", "2Tim", "Titus", "Phlm", "Heb", "Jas", "1Pet", "2Pet", "1John", "2John", "3John", "Jude", "Rev"]
 		
@@ -68,8 +72,10 @@ def main(argv):
 def process_chapter(chapter_path, index_path, enable_stem) :
 
 	# removed characters
-	remove_chars = ['.',',',';','?''!','-',u'–',u'―',u'—',u'~',':','"',')','(','[',']','/',"'s",u'’s',"'",u'‘',u'’',u'“',u'”']
+	remove_chars = ['.',',',';','?''!','-',u'–',u'―',u'—',u'~',':','"',')','(','[',']','/','\\',"'s",u'’s',"'",u'‘',u'’',u'“',u'”', u'¿', '*', '<','>','&','{','}']
 
+	restricted_words = ['a', 'and', 'about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'at', 'before', 'behind', 'below', 'beneath', 'beside', 'between', 'beyond', 'but', 'by', 'despite', 'down', 'during', 'except', 'for', 'from', 'in', 'inside', 'into', 'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 'over', 'past', 'since', 'the', 'through', 'throughout', 'till', 'to', 'toward', 'under', 'underneath', 'until', 'up', 'upon', 'with', 'within', 'without']
+		
 	# create jQuery object
 	html = open(chapter_path, 'r').read()
 	jquery = PyQuery(html)
@@ -87,15 +93,22 @@ def process_chapter(chapter_path, index_path, enable_stem) :
 		osis = v.attr('data-osis')
 		text = v.text()
 		
-		#remove all punctuation
-		text = text.replace('.','').replace(',','').replace(';','').replace('?','').replace('!','').replace('-','').replace(u'–','').replace(u'―','').replace(u'—','').replace(u'~','').replace(':','').replace('"','').replace(')','').replace('(','').replace('[','').replace(']','').replace('/','').replace("'s",'').replace(u'’s','').replace("'",'').replace(u'‘','').replace(u'’','').replace(u'“','').replace(u'”','')
+		# remove punctuation
+		for s in remove_chars:
+			text = text.replace(s, '')
 		
 		words = text.split(' ')
 		
 		for word in words:
 			word = word.strip().lower()
-						
-			if word != '' and not word.isnumeric():
+			
+			is_restricted = True
+			try:
+				restricted_words.index(word)
+			except:	
+				is_restricted = False
+								
+			if word != '' and not is_restricted and not word.isnumeric():
 			
 				# stemmer?
 				if enable_stem:
