@@ -20,7 +20,7 @@ def main(argv):
 	for opt, arg in opts:                
 		if opt in ("-i"):      
 			path = arg
-		elseif opt in ("-s"):      
+		elif opt in ("-s"):      
 			enable_stem = True		
 			
 	if path == '':
@@ -59,7 +59,7 @@ def main(argv):
 			chapter_path = os.path.join(path, chapter_osis + '.html')
 			
 			if os.path.exists(chapter_path):
-				process_chapter(chapter_path, index_path)
+				process_chapter(chapter_path, index_path, enable_stem)
 			else:
 				break
 	
@@ -68,7 +68,7 @@ def main(argv):
 	# close all files
 	cleanup_index(index_path)
 			
-def process_chapter(chapter_path, index_path) :
+def process_chapter(chapter_path, index_path, enable_stem) :
 	html = open(chapter_path, 'r').read()
 	jquery = PyQuery(html)
 	
