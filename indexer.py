@@ -72,7 +72,7 @@ def main(argv):
 def process_chapter(chapter_path, index_path, enable_stem) :
 
 	# removed characters
-	remove_chars = ['.',',',';','?''!','-',u'–',u'―',u'—',u'~',':','"',')','(','[',']','/','\\',"'s",u'’s',"'",u'‘',u'’',u'“',u'”', u'¿', '*', '<','>','&','{','}']
+	remove_chars = ['.',',',';','?','!','-',u'–',u'―',u'—',u'~',':','"',')','(','[',']','/','\\',"'s",u'’s',"'",u'‘',u'’',u'“',u'”', u'¿', '*', '<','>','&','{','}']
 
 	restricted_words = ['a', 'and', 'about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'at', 'before', 'behind', 'below', 'beneath', 'beside', 'between', 'beyond', 'but', 'by', 'despite', 'down', 'during', 'except', 'for', 'from', 'in', 'inside', 'into', 'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 'over', 'past', 'since', 'the', 'through', 'throughout', 'till', 'to', 'toward', 'under', 'underneath', 'until', 'up', 'upon', 'with', 'within', 'without']
 		
@@ -102,6 +102,7 @@ def process_chapter(chapter_path, index_path, enable_stem) :
 		for word in words:
 			word = word.strip().lower()
 			
+			#there's got to be a cleaner way to do this in Python
 			is_restricted = True
 			try:
 				restricted_words.index(word)
@@ -126,11 +127,7 @@ def process_chapter(chapter_path, index_path, enable_stem) :
 					f.write('["' + osis + '"')
 					f.close()				
 			
-		
-		# print osis + ' ' + str(words.count())
-
-
-
+#final step to close the JSOn arrays
 def cleanup_index(index_path) :
 	for the_file in os.listdir(index_path):
 		file_path = os.path.join(index_path, the_file)
